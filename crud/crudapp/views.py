@@ -4,6 +4,7 @@ from .forms import TodoForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework import status
 from django.contrib.auth.models import User
 from .serializers import ArticleSerializer, UserWithArticlesSerializer
@@ -44,11 +45,9 @@ def my_post_view(request):
     return Response({"received_data": data})
 
 # API: Wszystkie artykuły
-class ArticleListAPIView(APIView):
-    def get(self, request):
-        articles = Article.objects.all()
-        serializer = ArticleSerializer(articles, many=True)
-        return Response(serializer.data)
+class ArticleListAPIView(ListAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
 
 # API: Użytkownik + jego artykuły po e-mailu
 class UserByEmailAPIView(APIView):

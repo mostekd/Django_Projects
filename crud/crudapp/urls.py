@@ -7,8 +7,7 @@ urlpatterns = [
     path('update/<int:todo_id>/', views.update, name='update'),
     path('delete/<int:todo_id>/', views.delete, name='delete'),
     path('api/post/', my_post_view),
-
-    # Nowe endpointy
     path('api/articles/', ArticleListAPIView.as_view(), name='articles'),
     path('api/user-by-email/', UserByEmailAPIView.as_view(), name='user-by-email'),
 ]
+
