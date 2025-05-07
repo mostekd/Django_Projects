@@ -9,5 +9,7 @@ urlpatterns = [
     path('api/post/', my_post_view),
     path('api/articles/', ArticleListAPIView.as_view(), name='articles'),
     path('api/user-by-email/', UserByEmailAPIView.as_view(), name='user-by-email'),
+    path('articles-html/', views.articles_html, name='articles-html'),
+
 ]
 

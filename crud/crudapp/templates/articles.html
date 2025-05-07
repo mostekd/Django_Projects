@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Artykuły{% endblock %}
+{% block content %}
+<h1>Lista artykułów</h1>
+{% for article in articles %}
+<div class="todo-item">
+    <div>
+        <h2>{{ article.title }}</h2>
+        <p>{{ article.content }}</p>
+        <small>Autor: {{ article.author.username }} | {{ article.created_at }}</small>
+    </div>
+</div>
+{% empty %}
+<p>Brak artykułów.</p>
+{% endfor %}
+<a href="{% url 'index' %}">← Powrót do listy ToDo</a>
+{% endblock %}

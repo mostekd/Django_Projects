@@ -61,3 +61,7 @@ class UserByEmailAPIView(APIView):
             return Response(serializer.data)
         except User.DoesNotExist:
             return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+def articles_html(request):
+    articles = Article.objects.select_related('author').all()
+    return render(request, 'articles.html', {'articles': articles})
