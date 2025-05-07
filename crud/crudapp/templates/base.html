@@ -8,6 +8,12 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+  {% if user.is_authenticated %}
+  <div class="logout-link">
+      <a href="{% url 'logout' %}">Wyloguj się ({{ user.username }})</a>
+  </div>
+  {% endif %}
+
     <div class="mode-switch">
       <label class="switch">
         <input type="checkbox" id="theme-toggle">

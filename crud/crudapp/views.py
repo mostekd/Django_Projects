@@ -8,6 +8,10 @@ from rest_framework.generics import ListAPIView
 from rest_framework import status
 from django.contrib.auth.models import User
 from .serializers import ArticleSerializer, UserWithArticlesSerializer
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import RegisterForm
+from django.contrib.auth.decorators import login_required
 
 # Widoki HTML
 def index(request):
@@ -65,3 +69,57 @@ class UserByEmailAPIView(APIView):
 def articles_html(request):
     articles = Article.objects.select_related('author').all()
     return render(request, 'articles.html', {'articles': articles})
+
+def register_view(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+    else:
+        form = RegisterForm()
+    return render(request, 'register.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('index')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+@login_required
+def create_article(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        if title and content:
+            Article.objects.create(title=title, content=content, author=request.user)
+            return redirect('articles-html')
+    return render(request, 'create_article.html')
+
+@login_required
+def edit_article(request, article_id):
+    article = Article.objects.get(id=article_id, author=request.user)
+    if request.method == 'POST':
+        article.title = request.POST.get('title')
+        article.content = request.POST.get('content')
+        article.save()
+        return redirect('articles-html')
+    return render(request, 'edit_article.html', {'article': article})
+
+@login_required
+def delete_article(request, article_id):
+    article = Article.objects.get(id=article_id, author=request.user)
+    if request.method == 'POST':
+        article.delete()
+        return redirect('articles-html')
+    return render(request, 'delete_article.html', {'article': article})

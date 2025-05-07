@@ -10,6 +10,11 @@ urlpatterns = [
     path('api/articles/', ArticleListAPIView.as_view(), name='articles'),
     path('api/user-by-email/', UserByEmailAPIView.as_view(), name='user-by-email'),
     path('articles-html/', views.articles_html, name='articles-html'),
-
+    path('register/', views.register_view, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('articles/create/', views.create_article, name='create-article'),
+    path('articles/edit/<int:article_id>/', views.edit_article, name='edit-article'),
+    path('articles/delete/<int:article_id>/', views.delete_article, name='delete-article'),
 ]
 

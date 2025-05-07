@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Usuń artykuł{% endblock %}
+{% block content %}
+<h1>Czy na pewno usunąć artykuł "{{ article.title }}"?</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="submit" value="Usuń">
+    <a href="{% url 'articles-html' %}">Anuluj</a>
+</form>
+{% endblock %}
