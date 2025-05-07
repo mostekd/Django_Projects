@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import Todo
 from .forms import TodoForm
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 # Create your views here.
 def index(request):
@@ -31,3 +33,8 @@ def delete(request, todo_id):
         todo.delete()
         return redirect('index')
     return render(request, 'delete.html', {'todo': todo})
+
+@api_view(['POST'])
+def my_post_view(request):
+    data = request.data
+    return Response({"received_data": data})
