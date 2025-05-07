@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
-from .models import Todo
+from .models import Todo, Article
 from .forms import TodoForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from django.contrib.auth.models import User
+from .serializers import ArticleSerializer, UserWithArticlesSerializer
 
-# Create your views here.
+# Widoki HTML
 def index(request):
     todos = Todo.objects.all()
     form = TodoForm()
@@ -38,3 +42,23 @@ def delete(request, todo_id):
 def my_post_view(request):
     data = request.data
     return Response({"received_data": data})
+
+# API: Wszystkie artykuły
+class ArticleListAPIView(APIView):
+    def get(self, request):
+        articles = Article.objects.all()
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data)
+
+# API: Użytkownik + jego artykuły po e-mailu
+class UserByEmailAPIView(APIView):
+    def get(self, request):
+        email = request.query_params.get('email')
+        if not email:
+            return Response({'detail': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user = User.objects.get(email=email)
+            serializer = UserWithArticlesSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
