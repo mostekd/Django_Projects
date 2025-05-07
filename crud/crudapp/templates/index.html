@@ -4,7 +4,9 @@ ToDo List
 {% endblock %}
 {% block content %}
 <h1>Django CRUD</h1>
-<a href="{% url 'articles-html' %}">Zobacz artykuły</a>
+<div class="center-button">
+    <a href="{% url 'articles-html' %}">Zobacz artykuły</a>
+</div>
 <form method="POST">
     {% csrf_token %}
     {{ form.name }}
