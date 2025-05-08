@@ -136,3 +136,7 @@ EMAIL_HOST_PASSWORD = 'your_app_password'
 
 MEDIA_URL = '/attachments/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'attachments')
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://eighty-wasps-camp.loca.lt',
+]
