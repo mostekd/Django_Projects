@@ -26,10 +26,10 @@ SECRET_KEY = 'django-insecure-^k8^nn0b2a#@*fc14^_9z*dwo1nynl%vx_kg6am$#1xwa0py8m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'odd-falcons-unite.loca.lt']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'lucky-bobcats-go.loca.lt']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://odd-falcons-unite.loca.lt',
+    'https://lucky-bobcats-go.loca.lt/',
 ]
 
 # Application definition

@@ -440,3 +440,16 @@ form div {
     display: flex;
     flex-direction: column;
 }
+
+input[type="url"] {
+    padding: 12px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 16px;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}

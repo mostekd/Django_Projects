@@ -17,6 +17,7 @@
 {% for article in articles %}
 <div class="todo-item">
     <h2>{{ article.title|default:"(brak tytułu)" }}</h2>
+    {% if article.url %}
     <p>
         {% if article.status == 'in_progress' %}
             ⏳ Trwa pobieranie artykułu...
@@ -28,6 +29,7 @@
             ⏱️ Oczekuje na przetworzenie
         {% endif %}
     </p>
+    {% endif %}
     <p>{{ article.content }}</p>
     <small>Autor: {{ article.author.username }} | {{ article.created_at }}</small>
     {% if request.user == article.author %}
