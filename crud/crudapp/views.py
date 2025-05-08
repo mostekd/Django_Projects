@@ -18,7 +18,7 @@ from django.utils import timezone
 
 # Widoki HTML
 def index(request):
-    todos = Todo.objects.all()
+    todos = Todo.objects.filter(public=True)
     form = TodoForm()
     if request.method == 'POST':
         form = TodoForm(request.POST)

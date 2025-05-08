@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo
-        fields = ['name', 'deadline', 'category', 'is_done', 'attachment']
+        fields = ['name', 'deadline', 'category', 'is_done', 'attachment', 'public']
         widgets = {
             'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }

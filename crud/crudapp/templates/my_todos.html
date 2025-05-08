@@ -34,7 +34,7 @@
             <small>Deadline: {{ todo.deadline }}</small><br>
         {% endif %}
         {% if todo.attachment %}
-            <a href="{{ todo.attachment.url }}" target="_blank">📎 Załącznik</a><br>
+            <a href="{{ todo.attachment.url }}" target="_blank">📎 Załącznik</a>
         {% endif %}
         <a href="{% url 'edit-my-todo' todo.id %}">Edytuj</a>
         <a href="{% url 'delete-my-todo' todo.id %}">Usuń</a>
