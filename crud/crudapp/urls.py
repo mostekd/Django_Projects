@@ -16,5 +16,6 @@ urlpatterns = [
     path('articles/create/', views.create_article, name='create-article'),
     path('articles/edit/<int:article_id>/', views.edit_article, name='edit-article'),
     path('articles/delete/<int:article_id>/', views.delete_article, name='delete-article'),
+    path('my-todos/', views.my_todos, name='my-todos'),
 ]
 

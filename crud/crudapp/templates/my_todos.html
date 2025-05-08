@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Moje ToDo{% endblock %}
+{% block content %}
+<h1>Moje zadania</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Dodaj zadanie">
+</form>
+
+{% for todo in todos %}
+<div class="todo-item">
+    <p><strong>{{ todo.name }}</strong></p>
+    {% if todo.deadline %}
+    <small>Deadline: {{ todo.deadline }}</small>
+    {% endif %}
+</div>
+{% empty %}
+<p>Nie masz jeszcze zadań.</p>
+{% endfor %}
+
+<div class="center-button">
+    <a href="{% url 'index' %}">← Powrót</a>
+</div>
+{% endblock %}

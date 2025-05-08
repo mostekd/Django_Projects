@@ -123,3 +123,16 @@ def delete_article(request, article_id):
         article.delete()
         return redirect('articles-html')
     return render(request, 'delete_article.html', {'article': article})
+
+@login_required
+def my_todos(request):
+    todos = request.user.todos.all().order_by('deadline')
+    form = TodoForm()
+    if request.method == 'POST':
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            todo = form.save(commit=False)
+            todo.user = request.user
+            todo.save()
+            return redirect('my-todos')
+    return render(request, 'my_todos.html', {'todos': todos, 'form': form})
