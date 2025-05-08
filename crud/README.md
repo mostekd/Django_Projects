@@ -8,6 +8,7 @@ Aplikacja webowa stworzona w Django, umożliwiająca:
 * rejestrację i logowanie użytkowników
 * dodawanie, edytowanie i usuwanie artykułów
 * przeglądanie wszystkich artykułów oraz artykułów konkretnego użytkownika (także przez API)
+* osobisty panel ToDo z przypomnieniami mailowymi
 
 ## 📁 Struktura folderów
 
@@ -22,9 +23,11 @@ crud/
 │   ├── urls.py
 │   ├── forms.py
 │   ├── serializers.py
+│   ├── admin.py
 │   ├── templates/
-│   │   ├── base.html, index.html, register.html, login.html, articles.html,
-│   │   ├── create_article.html, edit_article.html, delete_article.html
+│   │   ├── base.html, index.html, register.html, login.html
+│   │   ├── articles.html, create_article.html, edit_article.html, delete_article.html
+│   │   ├── my_todos.html, edit_my_todo.html, delete_my_todo.html
 │   ├── static/css/style.css
 ```
 
@@ -70,9 +73,24 @@ Dostępny tylko po zalogowaniu:
 
 Przyciski "edytuj" i "usuń" pojawiają się tylko przy artykułach autora.
 
+## ✅ Panel ToDo (dla zalogowanych)
+
+* Lista zadań: `/my-todos/`
+* Tworzenie zadań z `deadline`
+* Edycja i usuwanie tylko własnych zadań
+* Stylizowane pola daty
+* Przycisk dostępny tylko po zalogowaniu
+
+## ✉️ Przypomnienia mailowe
+
+Zadanie cron lub komenda Django `remind_due_todos`, która:
+
+* sprawdza zadania z deadline < 12h
+* wysyła przypomnienia e-mailowe do ich autorów
+
 ## 🔐 Bezpieczeństwo
 
-* Tylko zalogowany użytkownik może tworzyć/edytować/susuwać swoje artykuły
+* Tylko zalogowany użytkownik może tworzyć/edytować/susuwać swoje artykuły i zadania
 * CSRF włączone, walidacja haseł (min 8 znaków, brak podobieństw do username itd.)
 
 ## 🔗 API endpointy (DRF)
@@ -84,6 +102,14 @@ Przyciski "edytuj" i "usuń" pojawiają się tylko przy artykułach autora.
 
 * `test_views.py` pokrywa podstawowy CRUD ToDo
 * Dodatkowe testy API można dodać do `test_api.py`
+
+## 🛠️ Panel administracyjny
+
+Dostępny pod `/admin/`:
+
+* Zarejestrowane modele: `Article`, `Todo`
+* W panelu admina można przeglądać, filtrować, edytować i usuwać dane
+* Wygodne pola wyszukiwania i sortowania
 
 ## 🎨 Styl
 
