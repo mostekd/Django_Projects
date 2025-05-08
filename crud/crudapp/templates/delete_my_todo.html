@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Usuń zadanie{% endblock %}
+{% block content %}
+<h1>Czy na pewno usunąć zadanie „{{ todo.name }}”?</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="submit" value="Usuń">
+    <a href="{% url 'my-todos' %}">Anuluj</a>
+</form>
+{% endblock %}

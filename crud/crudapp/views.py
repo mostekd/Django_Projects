@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 
 # Widoki HTML
 def index(request):
@@ -136,3 +137,23 @@ def my_todos(request):
             todo.save()
             return redirect('my-todos')
     return render(request, 'my_todos.html', {'todos': todos, 'form': form})
+
+@login_required
+def edit_my_todo(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id, user=request.user)
+    form = TodoForm(instance=todo)
+    if request.method == 'POST':
+        form = TodoForm(request.POST, instance=todo)
+        if form.is_valid():
+            form.save()
+            return redirect('my-todos')
+    return render(request, 'edit_my_todo.html', {'form': form, 'todo': todo})
+
+
+@login_required
+def delete_my_todo(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id, user=request.user)
+    if request.method == 'POST':
+        todo.delete()
+        return redirect('my-todos')
+    return render(request, 'delete_my_todo.html', {'todo': todo})

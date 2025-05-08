@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Edytuj zadanie{% endblock %}
+{% block content %}
+<h1>Edytuj ToDo</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Zapisz zmiany">
+</form>
+<a href="{% url 'my-todos' %}">← Powrót</a>
+{% endblock %}

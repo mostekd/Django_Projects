@@ -7,6 +7,11 @@ ToDo List
 <div class="center-button">
     <a href="{% url 'articles-html' %}">Zobacz artykuły</a>
 </div>
+{% if user.is_authenticated %}
+<div class="center-button">
+    <a href="{% url 'my-todos' %}">Moje ToDo</a>
+</div>
+{% endif %}
 <form method="POST">
     {% csrf_token %}
     {{ form.name }}

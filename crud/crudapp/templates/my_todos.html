@@ -15,6 +15,10 @@
     {% if todo.deadline %}
     <small>Deadline: {{ todo.deadline }}</small>
     {% endif %}
+    <div style="margin-top: 10px;">
+        <a href="{% url 'edit-my-todo' todo.id %}">Edytuj</a>
+        <a href="{% url 'delete-my-todo' todo.id %}">Usuń</a>
+    </div>
 </div>
 {% empty %}
 <p>Nie masz jeszcze zadań.</p>

@@ -3,12 +3,13 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 class Todo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='todos')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='todos', null=True)
     name = models.CharField(max_length=100)
     deadline = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name} ({self.user.username})"
+        return f"{self.name} ({self.user.username})" if self.user else self.name
+
 
     def is_due_soon(self):
         if self.deadline:

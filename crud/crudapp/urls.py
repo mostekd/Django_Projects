@@ -17,5 +17,7 @@ urlpatterns = [
     path('articles/edit/<int:article_id>/', views.edit_article, name='edit-article'),
     path('articles/delete/<int:article_id>/', views.delete_article, name='delete-article'),
     path('my-todos/', views.my_todos, name='my-todos'),
+    path('my-todos/edit/<int:todo_id>/', views.edit_my_todo, name='edit-my-todo'),
+    path('my-todos/delete/<int:todo_id>/', views.delete_my_todo, name='delete-my-todo'),
 ]
 
