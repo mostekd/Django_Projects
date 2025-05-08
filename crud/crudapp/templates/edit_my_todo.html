@@ -2,10 +2,27 @@
 {% block title %}Edytuj zadanie{% endblock %}
 {% block content %}
 <h1>Edytuj ToDo</h1>
-<form method="post">
+
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div>
+        {{ form.name.label_tag }} {{ form.name }} {{ form.name.errors }}
+    </div>
+    <div>
+        {{ form.deadline.label_tag }} {{ form.deadline }} {{ form.deadline.errors }}
+    </div>
+    <div>
+        {{ form.category.label_tag }} {{ form.category }} {{ form.category.errors }}
+    </div>
+    <div>
+        <label>{{ form.is_done }} {{ form.is_done.label }}</label>
+        {{ form.is_done.errors }}
+    </div>
+    <div>
+        {{ form.attachment.label_tag }} {{ form.attachment }} {{ form.attachment.errors }}
+    </div>
     <input type="submit" value="Zapisz zmiany">
 </form>
+
 <a href="{% url 'my-todos' %}">← Powrót</a>
 {% endblock %}

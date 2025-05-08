@@ -3,19 +3,39 @@
 {% block content %}
 <h1>Moje zadania</h1>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div>
+        {{ form.name.label_tag }} {{ form.name }} {{ form.name.errors }}
+    </div>
+    <div>
+        {{ form.deadline.label_tag }} {{ form.deadline }} {{ form.deadline.errors }}
+    </div>
+    <div>
+        {{ form.category.label_tag }} {{ form.category }} {{ form.category.errors }}
+    </div>
+    <div>
+        <label>{{ form.is_done }} {{ form.is_done.label }}</label>
+        {{ form.is_done.errors }}
+    </div>
+    <div>
+        {{ form.attachment.label_tag }} {{ form.attachment }} {{ form.attachment.errors }}
+    </div>
     <input type="submit" value="Dodaj zadanie">
 </form>
 
-{% for todo in todos %}
+{% for todo in page_obj %}
 <div class="todo-item">
-    <p><strong>{{ todo.name }}</strong></p>
-    {% if todo.deadline %}
-    <small>Deadline: {{ todo.deadline }}</small>
-    {% endif %}
-    <div style="margin-top: 10px;">
+    <div>
+        <p><strong>{{ todo.name }}</strong></p>
+        <small>Kategoria: {{ todo.get_category_display }}</small><br>
+        <small>Status: {{ todo.is_done|yesno:"✔️,❌" }}</small><br>
+        {% if todo.deadline %}
+            <small>Deadline: {{ todo.deadline }}</small><br>
+        {% endif %}
+        {% if todo.attachment %}
+            <a href="{{ todo.attachment.url }}" target="_blank">📎 Załącznik</a><br>
+        {% endif %}
         <a href="{% url 'edit-my-todo' todo.id %}">Edytuj</a>
         <a href="{% url 'delete-my-todo' todo.id %}">Usuń</a>
     </div>
@@ -23,6 +43,23 @@
 {% empty %}
 <p>Nie masz jeszcze zadań.</p>
 {% endfor %}
+
+<div class="center-button">
+    {% if today_filter %}
+        <a href="{% url 'my-todos' %}">Pokaż wszystkie</a>
+    {% else %}
+        <a href="{% url 'my-todos' %}?today=true">Zadania na dziś</a>
+    {% endif %}
+</div>
+
+<div class="center-button">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if today_filter %}&today=true{% endif %}">« Poprzednia</a>
+    {% endif %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if today_filter %}&today=true{% endif %}">Następna »</a>
+    {% endif %}
+</div>
 
 <div class="center-button">
     <a href="{% url 'index' %}">← Powrót</a>

@@ -408,3 +408,35 @@ input[type="datetime-local"] {
     width: 100%;
     box-sizing: border-box;
 }
+
+/* Stylizacja inputów plików */
+input[type="file"] {
+    font-family: 'Segoe UI', sans-serif;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+}
+
+/* Stylizacja checkboxa */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* Labelki bardziej czytelne i odstępy */
+form label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text);
+}
+
+form div {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}

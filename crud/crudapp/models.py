@@ -3,18 +3,22 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 class Todo(models.Model):
+    CATEGORY_CHOICES = [
+        ('work', 'Praca'),
+        ('home', 'Dom'),
+        ('study', 'Nauka'),
+        ('other', 'Inne'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='todos', null=True)
     name = models.CharField(max_length=100)
     deadline = models.DateTimeField(null=True, blank=True)
+    is_done = models.BooleanField(default=False)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='other')
+    attachment = models.FileField(upload_to='attachments/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.user.username})" if self.user else self.name
-
-
-    def is_due_soon(self):
-        if self.deadline:
-            return timezone.now() + timezone.timedelta(hours=12) >= self.deadline
-        return False
 
 
 class Article(models.Model):

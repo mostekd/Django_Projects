@@ -13,6 +13,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
+from django.utils import timezone
 
 # Widoki HTML
 def index(request):
@@ -127,16 +129,30 @@ def delete_article(request, article_id):
 
 @login_required
 def my_todos(request):
-    todos = request.user.todos.all().order_by('deadline')
+    todos_qs = request.user.todos.all().order_by('deadline')
+
+    # filtrowanie po deadline — np. ?today=true
+    if request.GET.get('today') == 'true':
+        today = timezone.now().date()
+        todos_qs = todos_qs.filter(deadline__date=today)
+
+    paginator = Paginator(todos_qs, 5)  # 5 na stronę
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     form = TodoForm()
     if request.method == 'POST':
-        form = TodoForm(request.POST)
+        form = TodoForm(request.POST, request.FILES)
         if form.is_valid():
             todo = form.save(commit=False)
             todo.user = request.user
             todo.save()
             return redirect('my-todos')
-    return render(request, 'my_todos.html', {'todos': todos, 'form': form})
+    return render(request, 'my_todos.html', {
+        'form': form,
+        'page_obj': page_obj,
+        'today_filter': request.GET.get('today') == 'true'
+    })
 
 @login_required
 def edit_my_todo(request, todo_id):
