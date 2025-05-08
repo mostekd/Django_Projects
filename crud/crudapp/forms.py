@@ -4,6 +4,11 @@ from .models import Todo
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+class PublicTodoForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields = ['name']  # lub ['name', 'category'] jeśli chcesz kategorię
+
 class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo

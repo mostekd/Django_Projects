@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Todo, Article
-from .forms import TodoForm
+from .forms import TodoForm, PublicTodoForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,16 +18,19 @@ from django.utils import timezone
 
 # Widoki HTML
 def index(request):
-    todos = Todo.objects.filter(public=True)
-    form = TodoForm()
+    form = PublicTodoForm()
     if request.method == 'POST':
-        form = TodoForm(request.POST)
+        form = PublicTodoForm(request.POST)
         if form.is_valid():
-            form.save()
+            todo = form.save(commit=False)
+            todo.user = None
+            todo.deadline = None
+            todo.public = True
+            todo.save()
             return redirect('index')
-    else:
-        form = TodoForm()
-    return render(request, 'index.html', {'todos': todos, 'form': form})
+    todos = Todo.objects.filter(public=True)
+    return render(request, 'index.html', {'form': form, 'todos': todos})
+
 
 def update(request, todo_id):
     todo = Todo.objects.get(id=todo_id)
