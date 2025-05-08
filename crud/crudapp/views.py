@@ -12,13 +12,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
-from rest_framework import viewsets
-from .models import Article
-from .serializers import ArticleSerializer
-
-class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
 
 # Widoki HTML
 def index(request):

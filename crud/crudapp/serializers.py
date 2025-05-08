@@ -5,7 +5,7 @@ from .models import Article
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = '__all__'
+        fields = ['id', 'title', 'content', 'created_at']
 
 class UserWithArticlesSerializer(serializers.ModelSerializer):
     articles = ArticleSerializer(many=True, read_only=True)

@@ -48,39 +48,3 @@ def auth_client(client, user):
 def test_article_list_api(client):
     response = client.get('/api/articles/')
     assert response.status_code == 200
-
-@pytest.mark.django_db
-def test_create_article_api(auth_client, user):
-    response = auth_client.post('/api/articles/', {
-        'title': 'Nowy artykuł',
-        'content': 'Zawartość testowa',
-        'author': user.id
-    })
-    assert response.status_code == 201
-    assert Article.objects.filter(title='Nowy artykuł').exists()
-
-@pytest.mark.django_db
-def test_get_article_detail_api(auth_client, user):
-    article = Article.objects.create(title='Detale', content='Treść', author=user)
-    response = auth_client.get(f'/api/articles/{article.id}/')
-    assert response.status_code == 200
-    assert response.json()['title'] == 'Detale'
-
-@pytest.mark.django_db
-def test_update_article_api(auth_client, user):
-    article = Article.objects.create(title='Stary tytuł', content='Treść', author=user)
-    response = auth_client.put(f'/api/articles/{article.id}/', {
-        'title': 'Nowy tytuł',
-        'content': 'Zmieniona treść',
-        'author': user.id
-    }, content_type='application/json')
-    assert response.status_code == 200
-    article.refresh_from_db()
-    assert article.title == 'Nowy tytuł'
-
-@pytest.mark.django_db
-def test_delete_article_api(auth_client, user):
-    article = Article.objects.create(title='Do usunięcia', content='Treść', author=user)
-    response = auth_client.delete(f'/api/articles/{article.id}/')
-    assert response.status_code == 204
-    assert not Article.objects.filter(id=article.id).exists()

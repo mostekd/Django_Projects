@@ -3,11 +3,6 @@
 ToDo List
 {% endblock %}
 {% block content %}
-{% if not user.is_authenticated %}
-<div class="center-button">
-    <a href="{% url 'login' %}">Zaloguj się</a>
-</div>
-{% endif %}
 <h1>Django CRUD</h1>
 <div class="center-button">
     <a href="{% url 'articles-html' %}">Zobacz artykuły</a>
