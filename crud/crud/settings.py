@@ -26,8 +26,11 @@ SECRET_KEY = 'django-insecure-^k8^nn0b2a#@*fc14^_9z*dwo1nynl%vx_kg6am$#1xwa0py8m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'eighty-wasps-camp.loca.lt']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'odd-falcons-unite.loca.lt']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://odd-falcons-unite.loca.lt',
+]
 
 # Application definition
 
@@ -136,7 +139,3 @@ EMAIL_HOST_PASSWORD = 'your_app_password'
 
 MEDIA_URL = '/attachments/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'attachments')
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://eighty-wasps-camp.loca.lt',
-]
