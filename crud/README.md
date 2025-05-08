@@ -9,6 +9,7 @@ Aplikacja webowa stworzona w Django, umożliwiająca:
 * dodawanie, edytowanie i usuwanie artykułów
 * przeglądanie wszystkich artykułów oraz artykułów konkretnego użytkownika (także przez API)
 * osobisty panel ToDo z przypomnieniami mailowymi
+* dodawanie artykułów przez URL do Wikipedii z automatycznym pobieraniem tytułu przez Celery + Redis
 
 ## 📁 Struktura folderów
 
@@ -16,17 +17,21 @@ Aplikacja webowa stworzona w Django, umożliwiająca:
 crud/
 ├── manage.py
 ├── crud/
+│   ├── __init__.py
+│   ├── celery.py
 │   └── settings.py, urls.py, wsgi.py, asgi.py
 ├── crudapp/
 │   ├── models.py
 │   ├── views.py
 │   ├── urls.py
 │   ├── forms.py
+│   ├── tasks.py
 │   ├── serializers.py
 │   ├── admin.py
 │   ├── templates/
 │   │   ├── base.html, index.html, register.html, login.html
-│   │   ├── articles.html, create_article.html, edit_article.html, delete_article.html
+│   │   ├── articles.html, create_article.html, edit_article.html, delete_article.html,
+│   │   ├── article_from_url.html
 │   │   ├── my_todos.html, edit_my_todo.html, delete_my_todo.html
 │   ├── static/css/style.css
 ```
@@ -48,7 +53,15 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-3. Uruchom serwer:
+3. Uruchom Redis i Celery:
+
+```bash
+sudo apt install redis-server
+redis-server
+celery -A crud worker --loglevel=info
+```
+
+4. Uruchom serwer Django:
 
 ```bash
 python manage.py runserver
@@ -58,69 +71,64 @@ python manage.py runserver
 
 * Rejestracja konta
 * Logowanie i wylogowywanie
-* Formularz logowania i rejestracji z walidacją błędów
-* Stylowe formularze
-* Link powrotu do strony głównej
+* Formularze z walidacją i stylizacją
+* Dodawanie artykułów z linka do Wikipedii
+* Przycisk „Moje ToDo” i prywatne zadania
 
-## 📝 CRUD artykułów (HTML)
-
-Dostępny tylko po zalogowaniu:
-
-* Tworzenie: `/articles/create/`
-* Edycja: `/articles/edit/<id>/`
-* Usuwanie: `/articles/delete/<id>/`
-* Lista: `/articles-html/`
-
-Przyciski "edytuj" i "usuń" pojawiają się tylko przy artykułach autora.
-
-## ✅ Panel ToDo (dla zalogowanych)
+## 📝 Panel ToDo (dla zalogowanych)
 
 * Lista zadań: `/my-todos/`
-* Tworzenie zadań z `deadline`
-* Edycja i usuwanie tylko własnych zadań
-* Stylizowane pola daty
-* Przycisk dostępny tylko po zalogowaniu
+* Kategorie: praca, dom, nauka
+* Status: ukończone / nieukończone
+* Deadline + przypomnienia e-mailowe (Celery)
+* Załączniki do zadań
+* Edycja, usuwanie i filtrowanie
+* Paginacja i filtr deadline (dzisiaj)
 
-## ✉️ Przypomnienia mailowe
+## 🌐 Artykuły z Wikipedii (asynchronicznie)
 
-Zadanie cron lub komenda Django `remind_due_todos`, która:
+* Formularz: wpisz URL → tworzony Article (status: `none`)
+* Celery odpala task:
 
-* sprawdza zadania z deadline < 12h
-* wysyła przypomnienia e-mailowe do ich autorów
+  * ustawia `in_progress`
+  * pobiera HTML + tag `og:title`
+  * ustawia tytuł i `success`
+* Wyświetlanie statusu na liście: `⏳`, `✅`, `❌`
 
 ## 🔐 Bezpieczeństwo
 
-* Tylko zalogowany użytkownik może tworzyć/edytować/susuwać swoje artykuły i zadania
-* CSRF włączone, walidacja haseł (min 8 znaków, brak podobieństw do username itd.)
+* Tylko zalogowany użytkownik ma dostęp do prywatnych zasobów
+* ToDo dodane z index.html są publiczne, anonimowe i bez deadline
 
 ## 🔗 API endpointy (DRF)
 
-* `GET /api/articles/` — zwraca wszystkie artykuły
-* `GET /api/user-by-email/?email=example@site.com` — zwraca użytkownika + jego artykuły lub 404
-
-## 🧪 Testy
-
-* `test_views.py` pokrywa podstawowy CRUD ToDo
-* Dodatkowe testy API można dodać do `test_api.py`
+* `GET /api/articles/` — wszystkie artykuły
+* `GET /api/user-by-email/?email=example@site.com` — artykuły konkretnego użytkownika lub 404
 
 ## 🛠️ Panel administracyjny
 
 Dostępny pod `/admin/`:
 
-* Zarejestrowane modele: `Article`, `Todo`
-* W panelu admina można przeglądać, filtrować, edytować i usuwać dane
-* Wygodne pola wyszukiwania i sortowania
+* Modele: `Article`, `Todo`
+* Wyszukiwanie, filtrowanie, sortowanie
+
+## 📦 requirements.txt (fragmenty)
+
+```
+django
+celery
+redis
+beautifulsoup4
+requests
+django-rest-framework
+```
 
 ## 🎨 Styl
 
-* Motyw ciemny + przycisk zmiany trybu (ciemny/jasny)
-* Responsywny design
-* Spójne przyciski i formularze
+* Stylizacja inputów: tekst, data, checkbox, file
+* Formy wyśrodkowane i przejrzyste
+* Responsywne przyciski i odstępy
 
 ## ✅ Gotowe!
 
-Projekt gotowy do użytku, rozszerzania i wdrożenia. Każdy krok został opisany w kodzie i szablonach.
-
----
-
-Masz pytania lub chcesz rozbudować projekt? Zajrzyj do `views.py`, `forms.py` lub `urls.py`, wszystko jest tam dobrze posegregowane.
+Projekt wspiera interaktywne tworzenie treści + async backend przez Celery + Redis. Wszystko gotowe do rozwoju lub wdrożenia!

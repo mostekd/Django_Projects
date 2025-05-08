@@ -19,5 +19,6 @@ urlpatterns = [
     path('my-todos/', views.my_todos, name='my-todos'),
     path('my-todos/edit/<int:todo_id>/', views.edit_my_todo, name='edit-my-todo'),
     path('my-todos/delete/<int:todo_id>/', views.delete_my_todo, name='delete-my-todo'),
+    path('articles/fetch/', views.create_article_from_url, name='create-article-from-url'),
 ]
 

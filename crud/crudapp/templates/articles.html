@@ -9,26 +9,35 @@
 
 {% if user.is_authenticated %}
 <div class="center-button">
-    <a href="{% url 'create-article' %}">+ Dodaj artykuł</a>
+    <a href="{% url 'create-article' %}">+ Dodaj ręcznie</a>
+    <a href="{% url 'create-article-from-url' %}">🌐 Dodaj z linka</a>
 </div>
 {% endif %}
 
 {% for article in articles %}
 <div class="todo-item">
-    <div>
-        <h2>{{ article.title }}</h2>
-        <p>{{ article.content }}</p>
-        <small>Autor: {{ article.author.username }} | {{ article.created_at }}</small>
-        {% if request.user == article.author %}
-        <div style="margin-top: 10px;">
-            <a href="{% url 'edit-article' article.id %}">Edytuj</a>
-            <a href="{% url 'delete-article' article.id %}">Usuń</a>
-        </div>
+    <h2>{{ article.title|default:"(brak tytułu)" }}</h2>
+    <p>
+        {% if article.status == 'in_progress' %}
+            ⏳ Trwa pobieranie artykułu...
+        {% elif article.status == 'success' %}
+            ✅ Gotowe
+        {% elif article.status == 'error' %}
+            ❌ Wystąpił błąd podczas pobierania
+        {% else %}
+            ⏱️ Oczekuje na przetworzenie
         {% endif %}
+    </p>
+    <p>{{ article.content }}</p>
+    <small>Autor: {{ article.author.username }} | {{ article.created_at }}</small>
+    {% if request.user == article.author %}
+    <div style="margin-top: 10px;">
+        <a href="{% url 'edit-article' article.id %}">Edytuj</a>
+        <a href="{% url 'delete-article' article.id %}">Usuń</a>
     </div>
+    {% endif %}
 </div>
 {% empty %}
 <p>Brak artykułów.</p>
 {% endfor %}
-
 {% endblock %}

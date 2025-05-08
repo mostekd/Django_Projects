@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Todo, Article
-from .forms import TodoForm, PublicTodoForm
+from .forms import TodoForm, PublicTodoForm, ArticleUrlForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.utils import timezone
+from .tasks import fetch_article_title
 
 # Widoki HTML
 def index(request):
@@ -176,3 +177,17 @@ def delete_my_todo(request, todo_id):
         todo.delete()
         return redirect('my-todos')
     return render(request, 'delete_my_todo.html', {'todo': todo})
+
+@login_required
+def create_article_from_url(request):
+    form = ArticleUrlForm()
+    if request.method == 'POST':
+        form = ArticleUrlForm(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.author = request.user
+            article.status = 'none'
+            article.save()
+            fetch_article_title.delay(article.id)
+            return redirect('articles-html')
+    return render(request, 'article_from_url.html', {'form': form})
