@@ -24,20 +24,18 @@ class Todo(models.Model):
 
 
 class Article(models.Model):
-    STATUS_CHOICES = [
-        ('none', 'Oczekuje'),
-        ('in_progress', 'W trakcie pobierania'),
-        ('success', 'Gotowe'),
-        ('error', 'Błąd'),
-    ]
+    class Status(models.TextChoices):
+        NONE = 'none', 'Oczekuje'
+        IN_PROGRESS = 'in_progress', 'W trakcie pobierania'
+        SUCCESS = 'success', 'Gotowe'
+        ERROR = 'error', 'Błąd'
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
     url = models.URLField(null=True, blank=True)
     title = models.CharField(max_length=255, blank=True)
     content = models.TextField(blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='none')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.NONE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title or self.url
-

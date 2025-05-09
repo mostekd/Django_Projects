@@ -17,7 +17,7 @@ def test_create_todo(client):
 @pytest.mark.django_db
 def test_update_todo(client):
     todo = Todo.objects.create(name="Stare zadanie")
-    response = client.post(reverse('update', args=[todo.id]), {'name': 'Zaktualizowane'})
+    response = client.post(reverse('update', args=[todo.id]), {'name': 'Zaktualizowane', 'category': 'other',})
     assert response.status_code == 302
     todo.refresh_from_db()
     assert todo.name == 'Zaktualizowane'
@@ -48,3 +48,29 @@ def auth_client(client, user):
 def test_article_list_api(client):
     response = client.get('/api/articles/')
     assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_article_detail_view(client):
+    user = User.objects.create_user(username='user1', password='pass')
+    article = Article.objects.create(
+        title="Test Tytuł",
+        content="Pełna treść testowego artykułu",
+        author=user
+    )
+    response = client.get(reverse('article-detail', args=[article.pk]))
+    assert response.status_code == 200
+    assert "Pełna treść testowego artykułu" in response.content.decode()
+
+@pytest.mark.django_db
+def test_celery_task_simulation():
+    from crudapp.tasks import fetch_article_title
+    user = User.objects.create_user(username='user2', password='pass')
+    article = Article.objects.create(
+        url='https://pl.wikipedia.org/wiki/Albert_Einstein',
+        author=user,
+        status=Article.Status.NONE  # ✅ poprawione
+    )
+    fetch_article_title(article.id)
+    article.refresh_from_db()
+    assert article.status in [Article.Status.SUCCESS, Article.Status.ERROR]
+    assert article.title != ""
