@@ -28,7 +28,6 @@
         {% if article.status == 'in_progress' %}
             ⏳ Trwa pobieranie artykułu...
         {% elif article.status == 'success' %}
-            ✅ Gotowe
         {% elif article.status == 'error' %}
             ❌ Wystąpił błąd podczas pobierania
         {% else %}
@@ -39,7 +38,10 @@
 
     <!-- Treść -->
     <div class="article-content">
-        <p>{{ article.content|linebreaksbr }}</p>
+        <p>
+            {{ article.content|truncatewords:100|linebreaksbr }}
+        </p>
+        <a href="{% url 'article-detail' article.pk %}">Pokaż więcej →</a>          
     </div>
 
     <!-- Przerwa -->

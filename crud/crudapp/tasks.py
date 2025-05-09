@@ -23,7 +23,7 @@ def fetch_article_title(article_id):
         content_div = soup.find('div', {'id': 'mw-content-text'})
         paragraphs = content_div.find_all('p', recursive=True) if content_div else []
         text = '\n\n'.join(p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True))
-        article.content = text[:3000] if text else '(brak treści)'
+        article.content = text if text else '(brak treści)'
 
         article.status = 'success'
     except Exception as e:

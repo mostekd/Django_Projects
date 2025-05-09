@@ -77,6 +77,10 @@ def articles_html(request):
     articles = Article.objects.select_related('author').all()
     return render(request, 'articles.html', {'articles': articles})
 
+def article_detail(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    return render(request, 'article_detail.html', {'article': article})
+
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)

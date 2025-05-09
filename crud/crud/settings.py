@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'grumpy-beans-talk.loca.lt']
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://grumpy-beans-talk.loca.lt/',
+    'https://grumpy-beans-talk.loca.lt',
 ]
 
 # Application definition
