@@ -2,7 +2,9 @@
 {% block title %}Moje ToDo{% endblock %}
 {% block content %}
 <h1>Moje zadania</h1>
-
+<div class="center-button">
+    <a href="{% url 'index' %}">← Powrót</a>
+</div>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div>
@@ -23,7 +25,13 @@
     </div>
     <input type="submit" value="Dodaj zadanie">
 </form>
-
+<div class="center-button">
+    {% if today_filter %}
+        <a href="{% url 'my-todos' %}">Pokaż wszystkie</a>
+    {% else %}
+        <a href="{% url 'my-todos' %}?today=true">Zadania na dziś</a>
+    {% endif %}
+</div>
 {% for todo in page_obj %}
 <div class="todo-item">
     <div>
@@ -45,23 +53,11 @@
 {% endfor %}
 
 <div class="center-button">
-    {% if today_filter %}
-        <a href="{% url 'my-todos' %}">Pokaż wszystkie</a>
-    {% else %}
-        <a href="{% url 'my-todos' %}?today=true">Zadania na dziś</a>
-    {% endif %}
-</div>
-
-<div class="center-button">
     {% if page_obj.has_previous %}
         <a href="?page={{ page_obj.previous_page_number }}{% if today_filter %}&today=true{% endif %}">« Poprzednia</a>
     {% endif %}
     {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}{% if today_filter %}&today=true{% endif %}">Następna »</a>
     {% endif %}
-</div>
-
-<div class="center-button">
-    <a href="{% url 'index' %}">← Powrót</a>
 </div>
 {% endblock %}
