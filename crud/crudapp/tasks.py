@@ -9,14 +9,26 @@ def fetch_article_title(article_id):
     article.status = 'in_progress'
     article.save()
 
+    headers = {
+        "User-Agent": "Mozilla/5.0 (compatible; MyDjangoApp/1.0; +http://localhost)"
+    }
+
     try:
-        response = requests.get(article.url, timeout=10)
+        response = requests.get(article.url, headers=headers, timeout=10)
         soup = BeautifulSoup(response.text, 'html.parser')
+
         meta = soup.find('meta', property='og:title')
-        title = meta['content'] if meta else 'Brak tytułu'
-        article.title = title
+        article.title = meta['content'] if meta else 'Brak tytułu'
+
+        content_div = soup.find('div', {'id': 'mw-content-text'})
+        paragraphs = content_div.find_all('p', recursive=True) if content_div else []
+        text = '\n\n'.join(p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True))
+        article.content = text[:3000] if text else '(brak treści)'
+
         article.status = 'success'
     except Exception as e:
-        article.title = f'Błąd: {str(e)}'
+        article.title = 'Błąd'
+        article.content = str(e)
         article.status = 'error'
+
     article.save()

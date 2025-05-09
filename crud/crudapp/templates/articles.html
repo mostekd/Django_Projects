@@ -15,8 +15,14 @@
 {% endif %}
 
 {% for article in articles %}
-<div class="todo-item">
+<div class="article-card">
+    <!-- Tytuł -->
     <h2>{{ article.title|default:"(brak tytułu)" }}</h2>
+
+    <!-- Przerwa -->
+    <div class="spacer"></div>
+
+    <!-- Status tylko jeśli URL istnieje -->
     {% if article.url %}
     <p>
         {% if article.status == 'in_progress' %}
@@ -30,12 +36,32 @@
         {% endif %}
     </p>
     {% endif %}
-    <p>{{ article.content }}</p>
-    <small>Autor: {{ article.author.username }} | {{ article.created_at }}</small>
+
+    <!-- Treść -->
+    <div class="article-content">
+        <p>{{ article.content|linebreaksbr }}</p>
+    </div>
+
+    <!-- Przerwa -->
+    <div class="spacer"></div>
+
+    <!-- Informacje -->
+    <div class="article-meta">
+        <small><strong>Autor:</strong> {{ article.author.username }}</small><br>
+        <small><strong>Data utworzenia:</strong> {{ article.created_at }}</small><br>
+        {% if article.url %}
+        <small><strong>Źródło:</strong> <a href="{{ article.url }}" target="_blank">{{ article.url }}</a></small>
+        {% endif %}
+    </div>
+
+    <!-- Przerwa -->
+    <div class="spacer"></div>
+
+    <!-- Przyciski -->
     {% if request.user == article.author %}
-    <div style="margin-top: 10px;">
-        <a href="{% url 'edit-article' article.id %}">Edytuj</a>
-        <a href="{% url 'delete-article' article.id %}">Usuń</a>
+    <div class="article-buttons">
+        <a href="{% url 'edit-article' article.id %}">✏️ Edytuj</a>
+        <a href="{% url 'delete-article' article.id %}">🗑️ Usuń</a>
     </div>
     {% endif %}
 </div>
