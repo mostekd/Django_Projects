@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <div class="logout-link">
+      <a href="{% url 'logout' %}">Wyloguj się ({{ user.username }})</a>
+  </div>
+  {% endif %}
+  {% if not user.is_authenticated %}
+  <div class="logout-link">
+      <a href="{% url 'login' %}">Zaloguj się</a>
+  </div>
+  {% endif %}
+
+    <div class="mode-switch">
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+      const toggle = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        html.classList.add("dark");
+        toggle.checked = false;
+      });
+
+      toggle.addEventListener("change", () => {
+        html.classList.toggle("dark", !toggle.checked);
+        html.classList.toggle("light", toggle.checked);
+      });
+    </script>
+</body>
+</html>
