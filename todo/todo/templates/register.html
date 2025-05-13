@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Rejestracja{% endblock %}
+{% block content %}
+<h1>Zarejestruj się</h1>
+<form method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <div>{{ form.username.label_tag }} {{ form.username }} {{ form.username.errors }}</div>
+    <div>{{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}</div>
+    <div>{{ form.password1.label_tag }} {{ form.password1 }} {{ form.password1.errors }}</div>
+    <div class="password-hints">
+        <p>Hasło musi zawierać:</p>
+        <ul>
+            <li>minimum 8 znaków</li>
+            <li>nie może być zbyt popularne</li>
+            <li>nie może być całkowicie numeryczne</li>
+            <li>nie może być podobne do nazwy użytkownika</li>
+        </ul>
+    </div>
+    <div>{{ form.password2.label_tag }} {{ form.password2 }} {{ form.password2.errors }}</div>
+    <input type="submit" value="Zarejestruj">
+</form>
+<div class="auth-buttons">
+    <a href="{% url 'login' %}">Masz konto? Zaloguj się</a>
+    <a href="{% url 'index' %}">← Powrót do strony głównej</a>
+</div>
+{% endblock %}

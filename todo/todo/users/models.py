@@ -1,26 +1,41 @@
-from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField
-from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+class Todo(models.Model):
+    CATEGORY_CHOICES = [
+        ('work', 'Praca'),
+        ('home', 'Dom'),
+        ('study', 'Nauka'),
+        ('other', 'Inne'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='todos', null=True)
+    name = models.CharField(max_length=100)
+    deadline = models.DateTimeField(null=True, blank=True)
+    is_done = models.BooleanField(default=False)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='other')
+    attachment = models.FileField(upload_to='attachments/', null=True, blank=True)
+    public = models.BooleanField(default=False)
 
 
-class User(AbstractUser):
-    """
-    Default custom user model for todo.
-    If adding fields that need to be filled at user signup,
-    check forms.SignupForm and forms.SocialSignupForms accordingly.
-    """
+    def __str__(self):
+        return f"{self.name} ({self.user.username})" if self.user else self.name
 
-    # First and last name do not cover name patterns around the globe
-    name = CharField(_("Name of User"), blank=True, max_length=255)
-    first_name = None  # type: ignore[assignment]
-    last_name = None  # type: ignore[assignment]
 
-    def get_absolute_url(self) -> str:
-        """Get URL for user's detail view.
+class Article(models.Model):
+    class Status(models.TextChoices):
+        NONE = 'none', 'Oczekuje'
+        IN_PROGRESS = 'in_progress', 'W trakcie pobierania'
+        SUCCESS = 'success', 'Gotowe'
+        ERROR = 'error', 'Błąd'
 
-        Returns:
-            str: URL for user detail.
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
+    url = models.URLField(null=True, blank=True)
+    title = models.CharField(max_length=255, blank=True)
+    content = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.NONE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-        """
-        return reverse("users:detail", kwargs={"username": self.username})
+    def __str__(self):
+        return self.title or self.url

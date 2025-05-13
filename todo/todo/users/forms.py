@@ -1,40 +1,28 @@
-from allauth.account.forms import SignupForm
-from allauth.socialaccount.forms import SignupForm as SocialSignupForm
-from django.contrib.auth import forms as admin_forms
-from django.utils.translation import gettext_lazy as _
+from django import forms
+from django.forms import ModelForm
+from .models import Todo, Article
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
-from .models import User
+class PublicTodoForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields = ['name']  # lub ['name', 'category'] jeśli chcesz kategorię
 
-
-class UserAdminChangeForm(admin_forms.UserChangeForm):
-    class Meta(admin_forms.UserChangeForm.Meta):  # type: ignore[name-defined]
-        model = User
-
-
-class UserAdminCreationForm(admin_forms.AdminUserCreationForm):  # type: ignore[name-defined]  # django-stubs is missing the class, thats why the error is thrown: typeddjango/django-stubs#2555
-    """
-    Form for User Creation in the Admin Area.
-    To change user signup, see UserSignupForm and UserSocialSignupForm.
-    """
-
-    class Meta(admin_forms.UserCreationForm.Meta):  # type: ignore[name-defined]
-        model = User
-        error_messages = {
-            "username": {"unique": _("This username has already been taken.")},
+class TodoForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields = ['name', 'deadline', 'category', 'is_done', 'attachment', 'public']
+        widgets = {
+            'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
 
-class UserSignupForm(SignupForm):
-    """
-    Form that will be rendered on a user sign up section/screen.
-    Default fields will be added automatically.
-    Check UserSocialSignupForm for accounts created from social.
-    """
-
-
-class UserSocialSignupForm(SocialSignupForm):
-    """
-    Renders the form when user has signed up using social accounts.
-    Default fields will be added automatically.
-    See UserSignupForm otherwise.
-    """
+class ArticleUrlForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['url']

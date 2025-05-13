@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+Delete Todo
+{% endblock %}
+{% block content %}
+<div class="delete-page">
+    <p class="delete-message">
+        Are you sure you want to delete <strong>"{{ todo }}"</strong>?
+    </p>
+    <div class="button-row delete-buttons">
+        <a href="{% url 'index' %}">Cancel</a>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Delete Todo">
+        </form>
+    </div>
+</div>
+{% endblock %}

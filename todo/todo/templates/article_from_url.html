@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Dodaj artykuł z linka{% endblock %}
+{% block content %}
+<h1>Wklej link do artykułu z Wikipedii</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Dodaj artykuł">
+</form>
+
+<div class="center-button">
+    <a href="{% url 'articles-html' %}">← Powrót</a>
+</div>
+{% endblock %}
