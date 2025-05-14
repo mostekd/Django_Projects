@@ -9,8 +9,8 @@
 
 {% if user.is_authenticated %}
 <div class="center-button">
-    <a href="{% url 'create-article' %}">+ Dodaj ręcznie</a>
-    <a href="{% url 'create-article-from-url' %}">🌐 Dodaj z linka</a>
+    <a href="{% url 'create-article' %}" class="btn btn-success">+ Dodaj ręcznie</a>
+    <a href="{% url 'create-article-from-url' %}" class="btn btn-primary">🌐 Dodaj z linka</a>
 </div>
 {% endif %}
 
@@ -19,27 +19,27 @@
     <!-- Tytuł -->
     <h2>{{ article.title|default:"(brak tytułu)" }}</h2>
 
+    <!-- Źródło -->
+    {% if article.url %}
+        <p><b>Źródło:</b> <a href="{{ article.url }}" target="_blank">{{ article.url }}</a></p>
+    {% endif %}
+
     <!-- Przerwa -->
     <div class="spacer"></div>
 
-    <!-- Status tylko jeśli URL istnieje -->
-    {% if article.url %}
-    <p>
-        {% if article.status == 'in_progress' %}
-            ⏳ Trwa pobieranie artykułu...
-        {% elif article.status == 'success' %}
-        {% elif article.status == 'error' %}
-            ❌ Wystąpił błąd podczas pobierania
-        {% else %}
-            ⏱️ Oczekuje na przetworzenie
-        {% endif %}
-    </p>
+    <!-- Status -->
+    {% if article.status == 'in_progress' %}
+        <span style="color: orange;">⏳ Trwa pobieranie artykułu...</span>
+    {% elif article.status == 'success' %}
+        <span style="color: green;">✅ Gotowe</span>
+    {% elif article.status == 'error' %}
+        <span style="color: red;">❌ Błąd</span>
     {% endif %}
 
     <!-- Treść -->
     <div class="article-content">
         <p>
-            {{ article.content|truncatewords:100|linebreaksbr }}
+            {{ article.content|truncatewords:50|linebreaksbr }}
         </p>
         <a href="{% url 'article-detail' article.pk %}">Pokaż więcej →</a>          
     </div>
@@ -51,16 +51,13 @@
     <div class="article-meta">
         <small><strong>Autor:</strong> {{ article.author.username }}</small><br>
         <small><strong>Data utworzenia:</strong> {{ article.created_at }}</small><br>
-        {% if article.url %}
-        <small><strong>Źródło:</strong> <a href="{{ article.url }}" target="_blank">{{ article.url }}</a></small>
-        {% endif %}
     </div>
 
     <!-- Przerwa -->
     <div class="spacer"></div>
 
     <!-- Przyciski -->
-    {% if request.user == article.author %}
+    {% if user.is_authenticated and article.author == user %}
     <div class="article-buttons">
         <a href="{% url 'edit-article' article.id %}">✏️ Edytuj</a>
         <a href="{% url 'delete-article' article.id %}">🗑️ Usuń</a>

@@ -74,7 +74,7 @@ class UserByEmailAPIView(APIView):
             return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 def articles_html(request):
-    articles = Article.objects.select_related('author').all()
+    articles = Article.objects.select_related('author').order_by('-created_at')
     return render(request, 'articles.html', {'articles': articles})
 
 def article_detail(request, pk):
@@ -115,6 +115,9 @@ def create_article(request):
         if title and content:
             Article.objects.create(title=title, content=content, author=request.user)
             return redirect('articles-html')
+        else:
+            error = 'Podaj tytuł i treść.'
+            return render(request, 'create_article.html', {'error': error})
     return render(request, 'create_article.html')
 
 @login_required
@@ -185,6 +188,7 @@ def delete_my_todo(request, todo_id):
 @login_required
 def create_article_from_url(request):
     form = ArticleUrlForm()
+    error = None
     if request.method == 'POST':
         form = ArticleUrlForm(request.POST)
         if form.is_valid():
@@ -194,4 +198,6 @@ def create_article_from_url(request):
             article.save()
             fetch_article_title.delay(article.id)
             return redirect('articles-html')
-    return render(request, 'article_from_url.html', {'form': form})
+        else:
+            error = 'Podaj poprawny URL.'
+    return render(request, 'article_from_url.html', {'form': form, 'error': error})
