@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Edytuj zadanie</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.text.label_tag }}
+    {{ form.text }}
+    <button type="submit" class="btn btn-primary">Zapisz</button>
+</form>
+<a href="{% url 'home' %}">Powrót</a>
+{% endblock %}
