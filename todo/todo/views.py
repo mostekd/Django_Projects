@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from .models import Task, Article
 from .forms import TaskForm, ArticleForm
 from django.views.decorators.http import require_POST
@@ -103,3 +104,11 @@ def delete_article(request, article_id):
         article.delete()
         return redirect('articles')
     return render(request, 'pages/delete_article.html', {'article': article})
+
+
+def article_detail(request, article_id):
+    try:
+        article = Article.objects.get(id=article_id)
+    except Article.DoesNotExist:
+        raise Http404("Artykuł nie istnieje.")
+    return render(request, 'pages/article_detail.html', {'article': article})

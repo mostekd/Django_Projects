@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ article.title }}</h1>
+{% if article.url %}
+<p><b>Źródło:</b> <a href="{{ article.url }}" target="_blank">{{ article.url }}</a></p>
+{% endif %}
+<hr>
+<div style="white-space: pre-line;">
+    {{ article.content }}
+</div>
+<a href="{% url 'articles' %}" class="btn btn-secondary mt-3">← Powrót do listy artykułów</a>
+{% endblock %}

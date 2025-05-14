@@ -34,7 +34,8 @@
     <li class="list-group-item">
         <strong>{{ article.title }}</strong><br>
         <small>{{ article.url }}</small>
-        <div>{{ article.content|truncatewords:50 }}</div>
+        <div>{{ article.content|slice:":400" }}{% if article.content|length > 400 %}...{% endif %}</div>
+        <a href="{% url 'article_detail' article.id %}" class="btn btn-sm btn-outline-primary mt-2">Pokaż cały artykuł</a>
         {% if request.user.is_authenticated and article.user == request.user %}
         <div class="mt-2">
             <a href="{% url 'edit_article' article.id %}" class="btn btn-sm btn-warning">Edytuj</a>
