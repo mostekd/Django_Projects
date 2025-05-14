@@ -27,6 +27,8 @@
 
   
   <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/darkmode.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 
 {% endblock css %}
@@ -49,6 +51,7 @@
 
   
   <script defer src="{% static 'js/project.js' %}"></script>
+  <script defer src="{% static 'js/theme-toggle.js' %}"></script>
 
 
 {% endblock javascript %}
@@ -98,6 +101,11 @@
               </li>
             {% endif %}
           </ul>
+          <div class="d-flex ms-auto">
+            <button id="theme-toggle-btn" class="btn btn-theme-toggle" title="Zmień motyw" aria-label="Zmień motyw">
+              <span id="theme-toggle-icon" class="material-icons">dark_mode</span>
+            </button>
+          </div>
         </div>
       </div>
     </nav>
