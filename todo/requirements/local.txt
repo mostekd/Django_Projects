@@ -5,6 +5,9 @@ ipdb==0.13.13  # https://github.com/gotcha/ipdb
 psycopg[c]==3.2.8  # https://github.com/psycopg/psycopg
 watchfiles==1.0.5  # https://github.com/samuelcolvin/watchfiles
 
+beautifulsoup4
+requests
+
 # Testing
 # ------------------------------------------------------------------------------
 mypy==1.15.0  # https://github.com/python/mypy

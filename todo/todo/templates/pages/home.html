@@ -19,6 +19,7 @@
                 {{ task.text }}
             {% endif %}
         </span>
+        {% if request.user.is_authenticated %}
         <div>
             {% if not task.is_done %}
                 <form method="post" action="{% url 'finish_task' task.id %}" style="display:inline;">
@@ -32,6 +33,7 @@
                 <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
             </form>
         </div>
+        {% endif %}
     </li>
     {% empty %}
     <li class="list-group-item">Brak zadań.</li>
