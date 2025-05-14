@@ -2,14 +2,28 @@
 {% block content %}
 <h1>Articles</h1>
 {% if request.user.is_authenticated %}
-<form method="post">
+<form method="post" class="mb-4">
     {% csrf_token %}
     <div class="mb-3">
         <label for="wiki_url" class="form-label">Wikipedia URL:</label>
-        <input type="url" class="form-control" id="wiki_url" name="wiki_url" placeholder="https://pl.wikipedia.org/wiki/Przyk%C5%82ad" required>
+        <input type="url" class="form-control" id="wiki_url" name="wiki_url" placeholder="https://pl.wikipedia.org/wiki/Przyk%C5%82ad">
     </div>
     <button type="submit" class="btn btn-primary">Kopiuj artykuł z Wikipedii</button>
 </form>
+<hr>
+<form method="post" class="mb-4">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="manual_title" class="form-label">Tytuł własnego artykułu:</label>
+        <input type="text" class="form-control" id="manual_title" name="manual_title" placeholder="Tytuł">
+    </div>
+    <div class="mb-3">
+        <label for="manual_content" class="form-label">Treść artykułu:</label>
+        <textarea class="form-control" id="manual_content" name="manual_content" rows="4" placeholder="Treść"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Dodaj własny artykuł</button>
+</form>
+{% if message %}<div class="alert alert-danger">{{ message }}</div>{% endif %}
 {% else %}
 <p>Zaloguj się, aby dodać artykuł.</p>
 {% endif %}
@@ -21,6 +35,12 @@
         <strong>{{ article.title }}</strong><br>
         <small>{{ article.url }}</small>
         <div>{{ article.content|truncatewords:50 }}</div>
+        {% if request.user.is_authenticated and article.user == request.user %}
+        <div class="mt-2">
+            <a href="{% url 'edit_article' article.id %}" class="btn btn-sm btn-warning">Edytuj</a>
+            <a href="{% url 'delete_article' article.id %}" class="btn btn-sm btn-danger">Usuń</a>
+        </div>
+        {% endif %}
     </li>
     {% empty %}
     <li class="list-group-item">Brak artykułów.</li>

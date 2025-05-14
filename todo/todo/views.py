@@ -57,18 +57,49 @@ def delete_task(request, task_id):
 
 
 def articles(request):
+    message = None
     if request.method == 'POST' and request.user.is_authenticated:
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            article = form.save(commit=False)
-            article.user = request.user
-            article.title = ''
-            article.content = ''
-            article.status = 'pending'
-            article.save()
-            fetch_wikipedia_article.delay(article.id)
-            return redirect('articles')
+        if 'wiki_url' in request.POST:
+            url = request.POST.get('wiki_url')
+            if url:
+                article = Article.objects.create(user=request.user, url=url, title='', content='', status='pending')
+                fetch_wikipedia_article.delay(article.id)
+                return redirect('articles')
+            else:
+                message = 'Podaj poprawny adres URL.'
+        elif 'manual_title' in request.POST and 'manual_content' in request.POST:
+            title = request.POST.get('manual_title')
+            content = request.POST.get('manual_content')
+            if title and content:
+                Article.objects.create(user=request.user, title=title, content=content, url='', status='success')
+                return redirect('articles')
+            else:
+                message = 'Podaj tytuł i treść.'
+        form = ArticleForm()
     else:
         form = ArticleForm()
     articles = Article.objects.all().order_by('-created')
-    return render(request, 'pages/articles.html', {'form': form, 'articles': articles})
+    return render(request, 'pages/articles.html', {'form': form, 'articles': articles, 'message': message})
+
+
+@login_required
+def edit_article(request, article_id):
+    article = get_object_or_404(Article, id=article_id, user=request.user)
+    if request.method == 'POST':
+        title = request.POST.get('manual_title')
+        content = request.POST.get('manual_content')
+        if title and content:
+            article.title = title
+            article.content = content
+            article.save()
+            return redirect('articles')
+    return render(request, 'pages/edit_article.html', {'article': article})
+
+
+@login_required
+def delete_article(request, article_id):
+    article = get_object_or_404(Article, id=article_id, user=request.user)
+    if request.method == 'POST':
+        article.delete()
+        return redirect('articles')
+    return render(request, 'pages/delete_article.html', {'article': article})
