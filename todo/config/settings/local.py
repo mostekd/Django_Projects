@@ -81,3 +81,13 @@ INSTALLED_APPS += ["django_extensions"]
 CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+    'khaki-cooks-like.loca.lt',  # ← add this line
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://khaki-cooks-like.loca.lt/',
+]
