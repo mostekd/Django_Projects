@@ -19,7 +19,16 @@ body.darkmode {
 }
 body.darkmode .navbar, body.darkmode .navbar-light.bg-light {
   background-color: #181a1b !important;
-  color: #e8e6e3 !important;
+  color: #fff !important;
+}
+body.darkmode .navbar .nav-link, body.darkmode .navbar .navbar-brand {
+  color: #fff !important;
+  text-shadow: 0 1px 6px #222, 0 0 2px #6a82fb;
+  font-weight: 700;
+}
+body.darkmode .navbar .nav-link:hover, body.darkmode .navbar .navbar-brand:hover {
+  color: #fc5c7d !important;
+  background: none !important;
 }
 
 .container {
