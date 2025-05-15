@@ -85,7 +85,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
-    'slick-shoes-shop.loca.lt',  # ← add this line
+    'slick-shoes-shop.loca.lt',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
