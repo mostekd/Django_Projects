@@ -32,8 +32,8 @@
 <ul class="list-group">
     {% for article in articles %}
     <li class="list-group-item">
-        <strong>{{ article.title }}</strong><br>
-        <small>{{ article.url }}</small>
+        <strong>{{ article.title }}</strong><br><br>
+        <small>Źródło: <a href="{{ article.url }}" target="_blank">{{ article.url }}</a></small><br><br>
         <div>{{ article.content|slice:":400" }}{% if article.content|length > 400 %}...{% endif %}</div>
         <a href="{% url 'article_detail' article.id %}" class="btn btn-sm btn-outline-primary mt-2">Pokaż cały artykuł</a>
         {% if request.user.is_authenticated and article.user == request.user %}
