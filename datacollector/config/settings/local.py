@@ -14,7 +14,7 @@ SECRET_KEY = env(
     default="gyLNAaMe2cfZyovQ3C2TNz3HyHDB6RxHr1yiALSowUahfdwLk4z8xOGQHxsm0dK3",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', 'neat-pandas-help.loca.lt']
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '192.168.0.216']
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -84,6 +84,9 @@ CELERY_TASK_EAGER_PROPAGATES = True
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
 }
 
 SPECTACULAR_SETTINGS = {
