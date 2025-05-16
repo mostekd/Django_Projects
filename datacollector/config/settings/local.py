@@ -14,7 +14,12 @@ SECRET_KEY = env(
     default="gyLNAaMe2cfZyovQ3C2TNz3HyHDB6RxHr1yiALSowUahfdwLk4z8xOGQHxsm0dK3",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '192.168.0.216']
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '192.168.0.216', '192.168.0.157']
+# Zezwalaj na CORS na wszystkich ścieżkach
+CORS_URLS_REGEX = r"^.*$"
+
+# Jeżeli nie masz, włącz globalne allow-all:
+CORS_ALLOW_ALL_ORIGINS = True
 
 # CACHES
 # ------------------------------------------------------------------------------

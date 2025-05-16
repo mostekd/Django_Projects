@@ -7,7 +7,7 @@
       <th>Imię</th>
       <th>Email</th>
       <th>Miasto</th>
-      <th>Wiek</th>
+      <th>Data</th>
     </tr>
   </thead>
   <tbody id="users-body">
@@ -30,7 +30,7 @@
         <td>${user.name}</td>
         <td>${user.email}</td>
         <td>${user.city ? user.city.name : ''}</td>
-        <td>${user.age}</td>
+        <td>${user.birthdate}</td>
       `;
       tbody.appendChild(row);
     });
