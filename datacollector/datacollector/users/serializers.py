@@ -9,7 +9,6 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'voivodeship']
 
 class UserSubmissionSerializer(serializers.ModelSerializer):
-    city = serializers.CharField(source="city.name", read_only=True)
     class Meta:
         model = UserSubmission
         fields = ['id', 'name', 'email', 'birthdate', 'city']
