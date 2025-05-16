@@ -40,12 +40,6 @@ class UserSubmission(models.Model):
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, related_name="submissions")
     birthdate = models.DateField()
     
-    def age(self):
-        today = date.today()
-        return today.year - self.birthdate.year - (
-            (today.month, today.day) < (self.birthdate.month, self.birthdate.day)
-        )
-    
     def __str__(self):
         return f"{self.name} ({self.email})"
 
