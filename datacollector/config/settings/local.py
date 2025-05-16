@@ -14,7 +14,7 @@ SECRET_KEY = env(
     default="gyLNAaMe2cfZyovQ3C2TNz3HyHDB6RxHr1yiALSowUahfdwLk4z8xOGQHxsm0dK3",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]  # noqa: S104
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', 'neat-pandas-help.loca.lt']
 
 # CACHES
 # ------------------------------------------------------------------------------
