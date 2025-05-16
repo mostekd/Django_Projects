@@ -1,8 +1,17 @@
-from django.urls import path
-
+from django.urls import path, include
 from .views import user_detail_view
 from .views import user_redirect_view
 from .views import user_update_view
+from rest_framework.routers import DefaultRouter
+from .views import UserSubmissionViewSet, CityViewSet
+
+router = DefaultRouter()
+router.register(r'submissions', UserSubmissionViewSet, basename='submissions')
+router.register(r'cities', CityViewSet, basename='cities')
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
 
 app_name = "users"
 urlpatterns = [

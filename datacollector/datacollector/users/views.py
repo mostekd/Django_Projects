@@ -6,8 +6,16 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 from django.views.generic import RedirectView
 from django.views.generic import UpdateView
-
 from datacollector.users.models import User
+from rest_framework import viewsets
+from .models import UserSubmission, Voivodeship, City
+from .serializers import UserSubmissionSerializer, CitySerializer
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+class CityViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = City.objects.select_related("voivodeship").all()
+    serializer_class = CitySerializer
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
@@ -44,3 +52,7 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+class UserSubmissionViewSet(viewsets.ModelViewSet):
+    queryset = UserSubmission.objects.all().order_by('-birthdate')
+    serializer_class = UserSubmissionSerializer
