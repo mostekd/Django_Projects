@@ -54,5 +54,14 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 user_redirect_view = UserRedirectView.as_view()
 
 class UserSubmissionViewSet(viewsets.ModelViewSet):
-    queryset = UserSubmission.objects.all().order_by('-birthdate')
     serializer_class = UserSubmissionSerializer
+
+    def get_queryset(self):
+        queryset = UserSubmission.objects.all().order_by('-birthdate')
+        city = self.request.query_params.get('city')
+        year = self.request.query_params.get('year')
+        if city:
+            queryset = queryset.filter(city__iexact=city)
+        if year:
+            queryset = queryset.filter(birthdate__year=year)
+        return queryset

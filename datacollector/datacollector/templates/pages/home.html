@@ -1,31 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-<table id="users-table" border="1" cellpadding="5" cellspacing="0">
-  <thead>
-    <tr>
-      <th>Imię</th>
-      <th>Email</th>
-      <th>Miasto</th>
-      <th>Data</th>
-    </tr>
-  </thead>
-  <tbody id="users-body">
-    <!-- tutaj będą wpisane wiersze przez JS -->
-  </tbody>
-</table>
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <input type="text" id="filter-city" class="form-control" placeholder="Filtruj po mieście...">
+    </div>
+    <div class="col-md-3">
+      <input type="number" id="filter-year" class="form-control" placeholder="Filtruj po roku urodzenia...">
+    </div>
+    <div class="col-md-2">
+      <button id="filter-btn" class="btn btn-primary w-100">Filtruj</button>
+    </div>
+    <div class="col-md-2">
+      <button id="clear-btn" class="btn btn-outline-secondary w-100">Wyczyść</button>
+    </div>
+  </div>
+  <table id="users-table" class="table table-striped table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Imię</th>
+        <th>Email</th>
+        <th>Miasto</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody id="users-body">
+      <!-- tutaj będą wpisane wiersze przez JS -->
+    </tbody>
+  </table>
+</div>
 
 <script>
-  async function loadUsers() {
-    const response = await fetch('/users/api/submissions/');
+  async function loadUsers(city = '', year = '') {
+    let url = '/users/api/submissions/';
+    const params = [];
+    if (city) params.push(`city=${encodeURIComponent(city)}`);
+    if (year) params.push(`year=${encodeURIComponent(year)}`);
+    if (params.length) url += '?' + params.join('&');
+    const response = await fetch(url);
     const data = await response.json();
-
     const tbody = document.getElementById('users-body');
-    tbody.innerHTML = ''; // wyczyść
-
+    tbody.innerHTML = '';
     data.forEach(user => {
       const row = document.createElement('tr');
-
       row.innerHTML = `
         <td>${user.name}</td>
         <td>${user.email}</td>
@@ -36,6 +54,16 @@
     });
   }
 
-  window.addEventListener('DOMContentLoaded', loadUsers);
+  document.getElementById('filter-btn').addEventListener('click', () => {
+    const city = document.getElementById('filter-city').value;
+    const year = document.getElementById('filter-year').value;
+    loadUsers(city, year);
+  });
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    document.getElementById('filter-city').value = '';
+    document.getElementById('filter-year').value = '';
+    loadUsers();
+  });
+  window.addEventListener('DOMContentLoaded', () => loadUsers());
 </script>
 {% endblock content %}
