@@ -97,4 +97,3 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Data Collector API',
 }
-
