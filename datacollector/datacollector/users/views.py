@@ -8,6 +8,7 @@ from django.views.generic import RedirectView
 from django.views.generic import UpdateView
 from datacollector.users.models import User
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 from .models import UserSubmission, Voivodeship, City
 from .serializers import UserSubmissionSerializer, CitySerializer
 from rest_framework.decorators import action
@@ -53,8 +54,16 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 user_redirect_view = UserRedirectView.as_view()
 
+
+class UserSubmissionPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class UserSubmissionViewSet(viewsets.ModelViewSet):
     serializer_class = UserSubmissionSerializer
+    pagination_class = UserSubmissionPagination
 
     def get_queryset(self):
         queryset = UserSubmission.objects.all().order_by('-birthdate')

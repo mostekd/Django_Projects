@@ -32,21 +32,30 @@
       <!-- tutaj będą wpisane wiersze przez JS -->
     </tbody>
   </table>
+  <nav>
+    <ul class="pagination justify-content-center" id="pagination">
+      <!-- paginacja JS -->
+    </ul>
+  </nav>
 </div>
 
 <script>
-  async function loadUsers(name = '', city = '', year = '') {
+  let currentPage = 1;
+  let lastFilters = { name: '', city: '', year: '' };
+
+  async function loadUsers(name = '', city = '', year = '', page = 1) {
     let url = '/users/api/submissions/';
     const params = [];
     if (name) params.push(`name=${encodeURIComponent(name)}`);
     if (city) params.push(`city=${encodeURIComponent(city)}`);
     if (year) params.push(`year=${encodeURIComponent(year)}`);
+    if (page) params.push(`page=${page}`);
     if (params.length) url += '?' + params.join('&');
     const response = await fetch(url);
     const data = await response.json();
     const tbody = document.getElementById('users-body');
     tbody.innerHTML = '';
-    data.forEach(user => {
+    (data.results || data).forEach(user => {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${user.name}</td>
@@ -56,18 +65,46 @@
       `;
       tbody.appendChild(row);
     });
+    renderPagination(data);
+  }
+
+  function renderPagination(data) {
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+    if (!data.count) return;
+    const pageCount = Math.ceil(data.count / (data.results ? data.results.length : 10));
+    const current = data.next ? (new URL(data.next).searchParams.get('page') - 1) : (data.previous ? (new URL(data.previous).searchParams.get('page') - 0 + 2) : 1);
+    for (let i = 1; i <= pageCount; i++) {
+      const li = document.createElement('li');
+      li.className = 'page-item' + (i === currentPage ? ' active' : '');
+      const a = document.createElement('a');
+      a.className = 'page-link';
+      a.href = '#';
+      a.textContent = i;
+      a.onclick = (e) => {
+        e.preventDefault();
+        currentPage = i;
+        loadUsers(lastFilters.name, lastFilters.city, lastFilters.year, currentPage);
+      };
+      li.appendChild(a);
+      pagination.appendChild(li);
+    }
   }
 
   document.getElementById('filter-btn').addEventListener('click', () => {
     const name = document.getElementById('filter-name').value;
     const city = document.getElementById('filter-city').value;
     const year = document.getElementById('filter-year').value;
-    loadUsers(name, city, year);
+    lastFilters = { name, city, year };
+    currentPage = 1;
+    loadUsers(name, city, year, currentPage);
   });
   document.getElementById('clear-btn').addEventListener('click', () => {
     document.getElementById('filter-name').value = '';
     document.getElementById('filter-city').value = '';
     document.getElementById('filter-year').value = '';
+    lastFilters = { name: '', city: '', year: '' };
+    currentPage = 1;
     loadUsers();
   });
   window.addEventListener('DOMContentLoaded', () => loadUsers());
