@@ -58,8 +58,11 @@ class UserSubmissionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = UserSubmission.objects.all().order_by('-birthdate')
+        name = self.request.query_params.get('name')
         city = self.request.query_params.get('city')
         year = self.request.query_params.get('year')
+        if name:
+            queryset = queryset.filter(name__icontains=name)
         if city:
             queryset = queryset.filter(city__iexact=city)
         if year:
