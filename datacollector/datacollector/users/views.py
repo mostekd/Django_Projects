@@ -66,7 +66,7 @@ class UserSubmissionViewSet(viewsets.ModelViewSet):
     pagination_class = UserSubmissionPagination
 
     def get_queryset(self):
-        queryset = UserSubmission.objects.all().order_by('-birthdate')
+        queryset = UserSubmission.objects.all()
         name = self.request.query_params.get('name')
         city = self.request.query_params.get('city')
         year = self.request.query_params.get('year')
