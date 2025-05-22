@@ -9,6 +9,7 @@ from django.views.generic import UpdateView
 from datacollector.users.models import User
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
 from .models import UserSubmission, Voivodeship, City
 from .serializers import UserSubmissionSerializer, CitySerializer
 from rest_framework.decorators import action
@@ -64,6 +65,9 @@ class UserSubmissionPagination(PageNumberPagination):
 class UserSubmissionViewSet(viewsets.ModelViewSet):
     serializer_class = UserSubmissionSerializer
     pagination_class = UserSubmissionPagination
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['id','name', 'email', 'city', 'birthdate']
+    ordering = ['name']  # default ordering
 
     def get_queryset(self):
         queryset = UserSubmission.objects.all()
