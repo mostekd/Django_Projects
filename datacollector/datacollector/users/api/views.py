@@ -9,6 +9,7 @@ from rest_framework.viewsets import GenericViewSet
 from datacollector.users.models import User
 
 from .serializers import UserSerializer
+from .user_submission_viewset import UserSubmissionViewSet
 
 
 class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericViewSet):
