@@ -13,6 +13,9 @@
       <input type="number" id="filter-year" class="form-control" placeholder="Filtruj po roku urodzenia...">
     </div>
     <div class="col-md-2 mb-2 mb-md-0">
+      <input type="text" id="filter-email" class="form-control" placeholder="Filtruj po emailu...">
+    </div>
+    <div class="col-md-2 mb-2 mb-md-0">
       <button id="filter-btn" class="btn btn-primary w-100">Filtruj</button>
     </div>
     <div class="col-md-2">
@@ -42,14 +45,15 @@
 
 <script>
   let currentPage = 1;
-  let lastFilters = { name: '', city: '', year: '' };
+  let lastFilters = { name: '', city: '', year: '', email: '' };
 
-  async function loadUsers(name = '', city = '', year = '', page = 1) {
+  async function loadUsers(name = '', city = '', year = '', email = '', page = 1) {
     let url = '/users/api/submissions/';
     const params = [];
     if (name) params.push(`name=${encodeURIComponent(name)}`);
     if (city) params.push(`city=${encodeURIComponent(city)}`);
     if (year) params.push(`year=${encodeURIComponent(year)}`);
+    if (email) params.push(`email=${encodeURIComponent(email)}`);
     if (page) params.push(`page=${page}`);
     if (params.length) url += '?' + params.join('&');
     const response = await fetch(url);
@@ -86,7 +90,7 @@
       a.onclick = (e) => {
         e.preventDefault();
         currentPage = i;
-        loadUsers(lastFilters.name, lastFilters.city, lastFilters.year, currentPage);
+        loadUsers(lastFilters.name, lastFilters.city, lastFilters.year, lastFilters.email, currentPage);
       };
       li.appendChild(a);
       pagination.appendChild(li);
@@ -97,15 +101,17 @@
     const name = document.getElementById('filter-name').value;
     const city = document.getElementById('filter-city').value;
     const year = document.getElementById('filter-year').value;
-    lastFilters = { name, city, year };
+    const email = document.getElementById('filter-email').value;
+    lastFilters = { name, city, year, email };
     currentPage = 1;
-    loadUsers(name, city, year, currentPage);
+    loadUsers(name, city, year, email, currentPage);
   });
   document.getElementById('clear-btn').addEventListener('click', () => {
     document.getElementById('filter-name').value = '';
     document.getElementById('filter-city').value = '';
     document.getElementById('filter-year').value = '';
-    lastFilters = { name: '', city: '', year: '' };
+    document.getElementById('filter-email').value = '';
+    lastFilters = { name: '', city: '', year: '', email: '' };
     currentPage = 1;
     loadUsers();
   });
@@ -120,7 +126,7 @@
         'X-CSRFToken': '{{ csrf_token }}'
       }
     });
-    loadUsers(lastFilters.name, lastFilters.city, lastFilters.year, currentPage);
+    loadUsers(lastFilters.name, lastFilters.city, lastFilters.year, lastFilters.email, currentPage);
   }
 </script>
 {% endblock content %}
